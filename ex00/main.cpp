@@ -2,10 +2,14 @@
 
 int main(int argc, char **argv)
 {
-    if (argc < 2 || argc > 3)
+    if (argc < 2)
     {
-        std::cout << "Wrong number of arguments provided." << std::endl;
-        return 0;
+        std::cerr << "Error: could not open file." << std::endl;
+        return 1;
     }
-
+    if (argc > 3)
+    {
+        std::cerr << "Error: Too many arguments." << std::endl;
+        return 1;
+    }
 }

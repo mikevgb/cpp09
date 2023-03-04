@@ -12,11 +12,13 @@ class BitcoinExchange
     private:
     std::map<std::string, int> _csvData;
     std::map<std::string, int> _inputData;
+    std::map<std::string, int> _result;
+    BitcoinExchange() {};
     void printError(std::string message)
     {
         std::cerr << message << std::endl;
         exit(1);
-    };
+    }
 
     public:
     //!! implementation in hpp file is forbidden!!!
@@ -39,13 +41,12 @@ class BitcoinExchange
                 std::getline(ss, date, ',');
                 std::getline(ss, value, ',');
                 int intval = std::stoi(value);
-                parseDate(date);
                 _csvData[date] = intval;
             }
             file.close();
         }
         else
-            printError("Error: cant open data.csv");
+            printError("Error: could not open data.csv");
     };
     void readFileInput(std::string fileName)
     {
@@ -60,27 +61,32 @@ class BitcoinExchange
                 std::getline(ss, date, '|');
                 std::getline(ss, value, '|');
                 int intval = std::stoi(value);
-                parseDate(date);
-                _inputData[date] = intval;
+                if (intval < 0 || intval > 1000)
+                    std::cerr << "Error: too large number." << std::endl;
+                if (!parseDate(date) && intval > 0 || intval <= 1000)
+                    _inputData[date] = intval;
             }
             file.close();
         }
         else
-            printError("Error: cant open input file");
+            printError("Error: could not open file.");
     };
-    void parseDate(std::string date)
+    int parseDate(std::string date)
     {
         int year = std::stoi(date.substr(0,4));
         int month = std::stoi(date.substr(5,2));
         int day = std::stoi(date.substr(8,2));
-        if (year < 2009 || year > 2022)
-            printError("Error: year out of range.");
-        if (month < 1 || month > 12)
-           printError("Error: month out of range.");
-        if (day < 1 || day > 31)
-            printError("Error: day out of range");
+        if (year < 2009 || year > 2022 || month < 1 || month > 12 || day < 1 || day > 31)
+        {
+            std::cout << "Error: bad input" << " => " << date << std::endl;
+            return(1);
+        }
         if (month == 2 && day > 29)
-            printError("Error: day out of range");        
+        {
+            std::cout << "Error: bad input" << " => " << date << std::endl; 
+            return(1);
+        }
+        return(0);     
     };
 };
 
