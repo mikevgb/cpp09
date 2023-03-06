@@ -10,6 +10,7 @@
 class BitcoinExchange
 {
     private:
+    //!! value must be either a float or a positive int
     std::map<std::string, int> _csvData;
     std::map<std::string, int> _inputData;
     std::map<std::string, int> _result;
@@ -87,6 +88,10 @@ class BitcoinExchange
             return(1);
         }
         return(0);     
+    };
+    void multiValues()
+    {
+        
     };
 };
 
