@@ -34,7 +34,18 @@ class RPN
         }
         std::cout << "Result: " <<  _rpnStack.top() << std::endl;        
     };
-    ~RPN() {};
+    ~RPN() 
+    {
+        if (_rpnStack.size() > 1)
+        {
+            for (int i = 0; i < _rpnStack.size(); i++)
+            {
+                int tmp = _rpnStack.top();
+                std::cout << "Left " << tmp << std::endl;
+                _rpnStack.pop();
+            }
+        }
+    };
     void makeMath(char symb, int num1, int num2)
     {
         switch(symb)
