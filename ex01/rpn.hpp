@@ -11,64 +11,11 @@ class RPN
 
     public:
     RPN();
-    RPN(int argc, char **argv) 
-    {
-        for(int i = 1; i < argc; i++)
-        {
-            std::string input = argv[i];
-            if (input == "+" || input == "-" || input == "*" || input == "/")
-            {
-                int x = _rpnStack.top();
-                std::cout << "x = " << x << std::endl;
-                _rpnStack.pop();
-                int y = _rpnStack.top();
-                std::cout << "y = " << y << std::endl;
-                _rpnStack.pop();
-                makeMath(input[0], x, y);
-            }
-            else 
-            {
-                //!! check if its a number 
-                _rpnStack.push(atoi(input.c_str()));
-            }
-        }
-        std::cout << "Result: " <<  _rpnStack.top() << std::endl;        
-    };
-    ~RPN() 
-    {
-        if (_rpnStack.size() > 1)
-        {
-            for (int i = 0; i < _rpnStack.size(); i++)
-            {
-                int tmp = _rpnStack.top();
-                std::cout << "Left " << tmp << std::endl;
-                _rpnStack.pop();
-            }
-        }
-    };
-    void makeMath(char symb, int num1, int num2)
-    {
-        switch(symb)
-        {
-            case '+':
-                std::cout << num1 << " + " << num2 << " = " << num1 + num2 << std::endl;
-                _rpnStack.push(num1 + num2);
-                break;
-            case '-':
-                std::cout << num1 << "-" << num2 << " = " << num1 - num2 << std::endl;
-                _rpnStack.push(num1 - num2);
-                break;
-            case '/':
-                std::cout << num1 << "/" << num2 << " = " << num1 / num2 << std::endl;
-                _rpnStack.push(num1 / num2); //check for 0's
-                break;
-            case '*':
-                std::cout << num1 << "*" << num2 << " = " << num1 * num2 << std::endl;
-                _rpnStack.push(num1 * num2);
-                break;
-            
-        }
-    }
+    RPN &operator=(RPN const &in);
+    RPN(RPN &copy);
+    RPN(char **argv);
+    ~RPN();
+    void makeMath(char symb, int num1, int num2);
 };
 
 #endif
