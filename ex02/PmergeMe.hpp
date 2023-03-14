@@ -3,109 +3,127 @@
 
 #include <iostream>
 #include <vector>
-#include <string>
+#include <utility>
+#include <sstream>
+#include <algorithm>
 
 class PmergeMe
 {
-    private:
     std::string _input;
-    std::vector<int> _firstGroupVector;
-    std::vector<int> _secondGroupVector;
-    std::vector<int> _finalVector;
+    std::vector<std::pair<int, int> > _pairV;
 
     public:
-    PmergeMe(std::string input) : _input(input) 
+    PmergeMe(int argc, char **argv)
     {
-        checkAndStore();
-        insertionSortVectors();
-        //mergeSortVectors();
+        //!!!measure time
+        
+        vectorOfPairs(argc, argv);
     };
     ~PmergeMe() {};
-    void checkAndStore()
+    void vectorOfPairs(int argc, char **argv)
     {
-        for (unsigned long i = 0; i < _input.length(); i++)
+        //!!! check if number of elements its odd or even
+        //4 even
+        std::cout << "Before: ";
+        for (int i = 1; i < argc; i++)
         {
-            std::cout << "checkandstore i " << i << std::endl;
-            /*if (isdigit(_input[i]) == false)
-            {
-                std::cout << "Error" << std::endl;
-                exit(1);
-            }
-            */
-            // could use a bool operator
-            if (i % 2 == 0)
-                _firstGroupVector.push_back((int)(_input[i]));
-            else
-                _secondGroupVector.push_back((int)_input[i]);
+            std::cout << argv[i] << " ";
         }
-    };
-    void insertionSortVectors()
-    {
-        //should use iterators
-        std::cout << "insertionsortvectors 1" << std::endl;
-        for (size_t i = 1; i < _firstGroupVector.size(); i++)
-        {
-            std::cout << "insertionsortvectors first" << _firstGroupVector[i] << std::endl;
-            size_t temp = _firstGroupVector[_firstGroupVector.size()];
-            size_t j = i - 1;
-            while ( j >= 0 && temp <= (size_t)_firstGroupVector[j])
-            {
-                _firstGroupVector[j + 1] = _firstGroupVector[j];
-                j = j - 1;
-            }
-            _firstGroupVector[j + 1] = temp;
-        }
-        for (size_t i = 1; i < _secondGroupVector.size(); i++)
-        {
-            std::cout << "insertionsortvectors second" << _secondGroupVector[i] << std::endl;
-            size_t temp = _secondGroupVector[_secondGroupVector.size()];
-            size_t j = i - 1;
-            while ( j >= 0 && temp <= (size_t)_secondGroupVector[j])
-            {
-                _secondGroupVector[j + 1] = _secondGroupVector[j];
-                j = j - 1;
-            }
-            _secondGroupVector[j + 1] = temp;
-        }
-    };
-    void mergeSortVectors()
-    {
-        size_t i = 0; //firstgroupvector
-        size_t j = 0; //secondgroupvector
-        size_t k = 0; //finalvector
-
-        while(i < _firstGroupVector.size() && j < _secondGroupVector.size())
-        {
-            if (_firstGroupVector[i] <= _secondGroupVector[j])
-                _finalVector[k] = _firstGroupVector[i];
-            else
-                _finalVector[k] = _secondGroupVector[j];
-            k++;
-        }
-        //copy left overs;
-        while (i < _firstGroupVector.size())
-        {
-            _finalVector[k] = _firstGroupVector[i];
-            i++;
-            k++;
-        }
-        while (i < _secondGroupVector.size())
-        {
-            _finalVector[k] = _secondGroupVector[j];
-            j++;
-            k++;
-        }
-    }
-    void printVector()
-    {
-        for (size_t i = 0; i < _finalVector.size(); i++)
-            std::cout << _finalVector[i] << ' ';
         std::cout << std::endl;
-    }
-    void printInput()
+
+        for (int i = 1; i < argc; i+=2)
+        {
+            //make sorted pairs
+            int tmp1;
+            int tmp2;
+            std::stringstream ss(argv[i]);
+            ss >> tmp1;
+            std::stringstream ss2(argv[i + 1]);
+            ss2 >> tmp2;
+            if (tmp1 < tmp2)
+                _pairV.push_back(std::make_pair(tmp1, tmp2));
+            else
+                _pairV.push_back(std::make_pair(tmp2, tmp1));
+            
+        }
+        //sort based on A
+        std::sort(_pairV.begin(), _pairV.end());
+        //call binaryInsertion till end
+        int mid;
+        
+        for(size_t i = 0; i < _pairV.size(); i++)
+        {
+            
+            if (_pairV[i].second != -1)
+            {
+                mid = _pairV.size() / 2;
+                //printVectorOfPairs();
+                //std::cout << "mid send = " << mid << std::endl;
+                //std::cout << "valToIndex = " << _pairV[i].second << std::endl;
+                binarySearchInsertionVectorOfPairs(mid, _pairV[i].second);
+                _pairV[i].second = -1;
+                //std::cout << "------------------------" << std::endl;
+            }
+        }
+        std::cout << "After:  ";
+        for (size_t i = 0; i < _pairV.size(); i++)
+        {
+            std::cout << _pairV[i].first << " ";
+        }
+        std::cout << std::endl;
+        //printVectorOfPairs();
+    };
+
+
+    int recalcMidVectorOfPairs(int lastMid)
     {
-        std::cout << "_input " << _input << std::endl;
-    }
+        int idk = ((_pairV.size() - lastMid) / 2);
+        return _pairV.size() / 2 + idk;
+    };
+
+    void binarySearchInsertionVectorOfPairs(int lastMid, int valToIndex)
+    {
+        int recalcMid;
+        if (valToIndex > _pairV[lastMid].first)
+        {
+            if (valToIndex < _pairV[lastMid + 1].first)
+                _pairV.insert(_pairV.begin() + lastMid + 1, std::make_pair(valToIndex, -1));
+            else if (valToIndex > _pairV[_pairV.size() - 1].first)
+                _pairV.push_back(std::make_pair(valToIndex, -1));
+            else
+            {
+                recalcMid = recalcMidVectorOfPairs(lastMid);
+                binarySearchInsertionVectorOfPairs(recalcMid, valToIndex);
+            }      
+        }
+        else if (valToIndex < _pairV[lastMid].first)
+        {
+            if (valToIndex > _pairV[lastMid + 1].first)
+                _pairV.insert(_pairV.begin() + lastMid - 1, std::make_pair(valToIndex, -1));
+            else
+            {
+                recalcMid = recalcMidVectorOfPairs(lastMid);
+                binarySearchInsertionVectorOfPairs(recalcMid, valToIndex);
+            }
+        }
+    };
+
+    void printVectorOfPairs()
+    {
+        for(size_t i = 0; i < _pairV.size(); i++)
+        {
+            std::cout << _pairV[i].first << " " << _pairV[i].second << std::endl;
+        }
+    };
 };
 
 #endif
+
+
+//1. group list into pairs, if list has odd number of elements, the last one is unpaired
+
+//2. sort each pair (comparing A and B)
+
+//3. order the list based on A, the unpaired is consider the last B
+
+//4. binary insertion sort of group B on A

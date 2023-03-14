@@ -1,9 +1,10 @@
 #include "PmergeMe.hpp"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-    if (argc > 1)
+    if (argc > 2)
     {
+        /*
         std::string arg1;
         for (int i = 1; i < argc; i++)
         {
@@ -12,10 +13,13 @@ int main(int argc, char *argv[])
             arg1.append(" ");
             
         }
-        std::cout << "Input " << arg1 << std::endl;
-        PmergeMe shorty(arg1);
-        shorty.printInput();
-        shorty.printVector();
+        */
+       
+        //std::cout << "Input " << argv << std::endl;
+        PmergeMe shorty(argc, argv);
+        //shorty.printVectorOfPairs();
+        // shorty.printInput();
+        // shorty.printVector();
     }
     return 0;
 }
