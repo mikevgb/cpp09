@@ -27,7 +27,7 @@ RPN::RPN(char **argv)
             _rpnStack.pop();
             int y = _rpnStack.top();
             _rpnStack.pop();
-            makeMath(input[i], x, y);
+            makeMath(input[i], y, x);
         }
         else 
         {

@@ -7,9 +7,9 @@ OBJS = $(SRCS:.cpp=.o)
 
 CXX = c++
 
-#CXXFLAGS = -Wall -Werror -Wextra -std=c++98
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
-CXXFLAGS =
+#CXXFLAGS =
 
 SANIT = -g3 -fsanitize=address
 

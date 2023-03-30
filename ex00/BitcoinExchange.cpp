@@ -37,7 +37,6 @@ void BitcoinExchange::readDatabaseCSV()
             std::string date, value;
             std::getline(ss, date, ',');
             std::getline(ss, value, ',');
-            //_csvData[date] = value;
             _csvData.insert(std::pair<std::string, std::string>(date, value));
         }
         file.close();
@@ -63,7 +62,6 @@ void BitcoinExchange::readFileInput()
             std::getline(ss, value, '|');
             date.erase(remove_if(date.begin(), date.end(), isspace), date.end()); //clean whitespaces
             value.erase(remove_if(value.begin(), value.end(), isspace), value.end());
-            //_inputData[date] = value;
             _inputData.insert(std::pair<std::string, std::string>(date, value));
         }
         file.close();
