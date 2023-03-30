@@ -6,12 +6,13 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 class BitcoinExchange
 {
     private:
-    std::map<std::string, std::string> _csvData;
-    std::map<std::string, std::string> _inputData;
+    std::multimap<std::string, std::string> _csvData;
+    std::multimap<std::string, std::string> _inputData;
     std::string _fileInput;
 
     public:

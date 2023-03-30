@@ -37,7 +37,8 @@ void BitcoinExchange::readDatabaseCSV()
             std::string date, value;
             std::getline(ss, date, ',');
             std::getline(ss, value, ',');
-            _csvData[date] = value;
+            //_csvData[date] = value;
+            _csvData.insert(std::pair<std::string, std::string>(date, value));
         }
         file.close();
     }
@@ -62,7 +63,8 @@ void BitcoinExchange::readFileInput()
             std::getline(ss, value, '|');
             date.erase(remove_if(date.begin(), date.end(), isspace), date.end()); //clean whitespaces
             value.erase(remove_if(value.begin(), value.end(), isspace), value.end());
-            _inputData[date] = value;
+            //_inputData[date] = value;
+            _inputData.insert(std::pair<std::string, std::string>(date, value));
         }
         file.close();
     }
@@ -110,23 +112,23 @@ void BitcoinExchange::printMaps()
 
 void BitcoinExchange::multiValues()
 {
-    std::map<std::string, std::string>::const_iterator it;
-    std::map<std::string, std::string>::const_iterator it2;
+    std::multimap<std::string, std::string>::const_iterator it;
+    std::multimap<std::string, std::string>::const_iterator it2;
     for (it2 = _inputData.begin(); it2 != _inputData.end(); it2++)
     {
         if (it2->first != "date")
         {
             if (parseDate(it2->first) == true)
             {
-                it = _csvData.find(it2->first);
+                it = _csvData.lower_bound(it2->first);
                 if (it != _csvData.end())
                 {
                     float tmp1;
                     float tmp2;
                     float result = 0.0;
-                    std::stringstream ss(_csvData.find(it2->first)->second); //no stof allowed :(
+                    std::stringstream ss(it->second); //no stof allowed :(
                     ss >> tmp1;
-                    std::stringstream ss2(_inputData.find(it2->first)->second);
+                    std::stringstream ss2(it2->second);
                     ss2 >> tmp2;
                     if (tmp2 < 0)
                         std::cerr << "Error: not a positive number." << std::endl;
@@ -137,7 +139,7 @@ void BitcoinExchange::multiValues()
                         result = tmp1 * tmp2;
                         std::cout << it->first << " => " << it2->second << " " << "= " << result << std::endl;
                     }
-                } 
+                }
             }         
         }
     }
