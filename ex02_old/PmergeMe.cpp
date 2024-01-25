@@ -42,7 +42,7 @@ PmergeMe &PmergeMe::operator=(PmergeMe const &in)
     _elapsedVector = in._elapsedVector;
     _elapsedList = in._elapsedList;
     _howManyNumbers = in._howManyNumbers;
-
+    return *this;
 };
 
 PmergeMe::PmergeMe(PmergeMe &copy)

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stack>
+// #include <algorithm> //
 
 class RPN
 {
@@ -12,7 +13,7 @@ class RPN
     public:
     RPN();
     RPN &operator=(RPN const &in);
-    RPN(RPN &copy);
+    RPN(RPN const &copy);
     RPN(char **argv);
     ~RPN();
     void makeMath(char symb, int num1, int num2);
