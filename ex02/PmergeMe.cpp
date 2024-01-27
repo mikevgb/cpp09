@@ -31,10 +31,10 @@ PmergeMe::PmergeMe(int argc, char **argv)
     };
     clock_t startTime = clock();
     mergeInsertionSortVector();
-    _elapsedVector = (clock() - startTime) / (double)CLOCKS_PER_SEC;
+    _elapsedVector = (clock() - startTime) / (double)(CLOCKS_PER_SEC / 1000000);
     startTime = clock();
     mergeInsertionSortList();
-    _elapsedList = (clock() - startTime) / (double)CLOCKS_PER_SEC;
+    _elapsedList = (clock() - startTime) / (double)(CLOCKS_PER_SEC / 1000000);
     printResults();
 };
 
@@ -43,6 +43,8 @@ PmergeMe::~PmergeMe() {};
 PmergeMe &PmergeMe::operator=(PmergeMe const &in)
 {
     _vector = in._vector;
+    _finalVector = in._finalVector;
+    _finalList = in._finalList;
     _bup = in._bup;
     _list = in._list;
     _elapsedVector = in._elapsedVector;
@@ -63,17 +65,12 @@ PmergeMe::PmergeMe(PmergeMe &copy)
     _howManyNumbers = copy._howManyNumbers;
 };
 
-bool PmergeMe::pairComparator(int a, int b)
-{
-    return a < b;
-}
-
 void PmergeMe::mergeInsertionSortVector()
 {
     //sort each pair
     for (std::vector<std::pair<int, int> >::iterator it = _vector.begin(); it != _vector.end(); it++)
     {
-        if (pairComparator(it->first, it->second) == true)
+        if (it->first < it->second)
             std::swap(it->first, it->second);
     }
     //store the B values (the small values) in _finalVector
@@ -100,7 +97,7 @@ void PmergeMe::mergeInsertionSortList()
     //sort each pair
     for (std::list<std::pair<int, int> >::iterator it = _list.begin(); it != _list.end(); it++)
     {
-        if (pairComparator(it->first, it->second) == true)
+        if (it->first < it->second)
             std::swap(it->first, it->second);
     }
     //store the B values (the small values) in the _finalList)
@@ -127,14 +124,14 @@ void PmergeMe::printResults()
     std::cout << "Before: ";
     for (size_t i = 0; i < _bup.size(); i++)
         std::cout << _bup[i] << " ";
-    std::cout << std::endl << "After (vector): ";
+    std::cout << std::endl << "After: ";
     for (std::vector<int>::iterator it = _finalVector.begin(); it != _finalVector.end(); it++)
         std::cout << *it << " ";
-    std::cout << std::endl << "After (list): ";
-    for (std::list<int>::iterator it = _finalList.begin(); it != _finalList.end(); it++)
-        std::cout << *it << " ";
+    // std::cout << std::endl << "After (list): ";
+    // for (std::list<int>::iterator it = _finalList.begin(); it != _finalList.end(); it++)
+    //     std::cout << *it << " ";
     std::cout << std::endl << "Time to process a range of " << _howManyNumbers 
-    << " elements with std::vector " << _elapsedVector << " seconds." << std::endl;
+    << " elements with std::vector : " << _elapsedVector << " us" << std::endl;
     std::cout << "Time to process a range of " << _howManyNumbers 
-    << " elements with std::list " << _elapsedList << " seconds." << std::endl;
+    << " elements with std::list : " << _elapsedList << " us" << std::endl;
 };

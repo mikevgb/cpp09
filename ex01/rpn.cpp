@@ -19,15 +19,15 @@ RPN::RPN(char **argv)
 {
     std::string input = argv[1];
     input.erase(remove_if(input.begin(), input.end(), isspace), input.end()); //clean whitespaces
-    if (_rpnStack.size() < 2)
-    {
-        throw std::runtime_error("Error: Not enough operands");
-    }
+
     for (size_t i = 0; i < input.size(); i++)
     {
         if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/')
         {
-
+            if (_rpnStack.size() < 2)
+            {
+                throw std::runtime_error("Error: Not enough operands");
+            }
             int x = _rpnStack.top();
             _rpnStack.pop();
             int y = _rpnStack.top();

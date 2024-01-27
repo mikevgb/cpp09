@@ -17,7 +17,6 @@ class PmergeMe
     std::vector<int> _bup;
     std::list<std::pair<int, int> > _list;
     std::list<int> _finalList;
-    std::vector<int>::iterator it;
     double _elapsedVector;
     double _elapsedList;
     int _howManyNumbers;
@@ -29,7 +28,6 @@ class PmergeMe
     ~PmergeMe();
     PmergeMe &operator=(PmergeMe const &in);
     PmergeMe(PmergeMe &copy);
-    static bool pairComparator(int a, int b);
     void mergeInsertionSortVector();
     void mergeInsertionSortList();
     void printResults();

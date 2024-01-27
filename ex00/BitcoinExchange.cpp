@@ -64,30 +64,40 @@ void BitcoinExchange::readFileInput()
     std::string line;
     while (std::getline(file, line))
     {
+        if (line.empty())
+        {
+            continue;
+        }
         std::stringstream ss(line);
         std::string date, value;
         if (std::getline(ss, date, '|') && std::getline(ss, value, '|'))
         {
             date.erase(remove_if(date.begin(), date.end(), isspace), date.end()); //clean whitespaces
             value.erase(remove_if(value.begin(), value.end(), isspace), value.end());
-            if (parseDate(date))
+            if (date == "date" && value == "value")
+                continue;
+            if (parseDate(date) && !value.empty())
             {
                 _inputData.insert(std::pair<std::string, std::string>(date, value));
             }
-        }
+        }    
         else
         {
             std::cerr << "Error: Incorrect format in " << _fileInput << " => " << line << std::endl;
-        }
+        }        
     }
     file.close();
 };
 
 bool BitcoinExchange::parseDate(std::string date)
 {
+    if (date == "date")
+    {
+        return true;
+    }
     if (date.length() != 10)
     {
-        std::cerr << "Error: Incorrect date format (length) =>" << date << std::endl;
+        std::cerr << "Error: Incorrect date format (length) => " << date << std::endl;
         return false;
     }
     int year, month, day;
